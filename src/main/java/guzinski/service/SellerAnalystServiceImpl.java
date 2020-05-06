@@ -37,7 +37,6 @@ public class SellerAnalystServiceImpl implements SellerAnalystService {
                 .stream()
                 .filter(order -> order.getSellerName().equals(seller.getName()))
                 .mapToDouble(orderAnalystService::orderAmount)
-                .peek(System.out::println)
                 .sum();
     }
 
