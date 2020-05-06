@@ -1,6 +1,6 @@
 # Southsystem backend test
 
-## The Applicaiton
+## The Application
 This App was build using Java as language at the 11 version, and Gradle (v6.1) was choice to be the build tool.
 
 [Google Guice](https://github.com/google/guice/wiki/GettingStarted) was used to make dependencies injectable.
@@ -9,7 +9,7 @@ This App was build using Java as language at the 11 version, and Gradle (v6.1) w
 
 [Mockito](https://site.mockito.org/) was used to power the unit tests.
 
-##Env vars
+## Env vars
 The bellow env vars should be provided to a good run of this application.
 
 - IN_DIR // Directory where the app will read the files
