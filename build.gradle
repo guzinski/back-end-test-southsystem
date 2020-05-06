@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'application'
+    id 'io.freefair.lombok' version '5.0.1'
+}
+
+group ''
+version '1.0-SNAPSHOT'
+generateLombokConfig.enabled = false
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.pcollections:pcollections:3.0.3'
+    implementation 'com.google.inject:guice:4.2.2:no_aop'
+
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'org.mockito:mockito-core:3.2.4'
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+}
+
+mainClassName = 'guzinski.Main'
+
+run {
+    jvmArgs '-Xmx256M'
+    standardInput = System.in
+}
