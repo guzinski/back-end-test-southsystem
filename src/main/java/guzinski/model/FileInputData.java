@@ -9,6 +9,6 @@ import org.pcollections.PVector;
 public class FileInputData {
     String fileName;
     PVector<Seller> sellers;
-    PVector<Costumer> costumers;
+    PVector<Customer> customers;
     PVector<Order> orders;
 }

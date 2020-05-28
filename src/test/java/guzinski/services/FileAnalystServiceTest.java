@@ -2,27 +2,20 @@ package guzinski.services;
 
 import guzinski.model.FileInputData;
 import guzinski.model.FileOutputData;
-import guzinski.model.Order;
-import guzinski.service.CostumerAnalystService;
+import guzinski.service.CustomerAnalystService;
 import guzinski.service.FileAnalystService;
 import guzinski.service.FileAnalystServiceImpl;
 import guzinski.service.OrderAnalystService;
 import guzinski.service.SellerAnalystService;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.quality.Strictness;
 import org.pcollections.TreePVector;
-
-import java.io.File;
-import java.util.concurrent.CompletionStage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -37,7 +30,7 @@ public class FileAnalystServiceTest {
     private OrderAnalystService orderAnalystService;
 
     @Mock
-    private CostumerAnalystService costumerAnalystService;
+    private CustomerAnalystService customerAnalystService;
 
     @Mock
     private SellerAnalystService sellerAnalystService;
@@ -45,20 +38,20 @@ public class FileAnalystServiceTest {
     private FileAnalystService service;
 
     @Before
-    public void setUp() throws Exception {
-        service = new FileAnalystServiceImpl(costumerAnalystService, orderAnalystService, sellerAnalystService);
+    public void setUp() {
+        service = new FileAnalystServiceImpl(customerAnalystService, orderAnalystService, sellerAnalystService);
     }
 
     @Test
     public void testProcessFileFilenameOutput() {
         var input = FileInputData.builder()
             .sellers(TreePVector.empty())
-            .costumers(TreePVector.empty())
+            .customers(TreePVector.empty())
             .orders(TreePVector.empty())
             .fileName("filename.dat")
             .build();
 
-        Mockito.when(costumerAnalystService.findNumberOfCostumers(any()))
+        Mockito.when(customerAnalystService.findNumberOfCustomers(any()))
             .thenReturn(12L);
         Mockito.when(orderAnalystService.findExpensiveSaleId(any()))
             .thenReturn("1");
@@ -72,7 +65,7 @@ public class FileAnalystServiceTest {
         assertThat(output.getOutputFileName(), equalTo("filename.done.dat"));
         assertThat(output.getWorseSellerName(), equalTo("Luciano"));
         assertThat(output.getNumberOfSellers(), equalTo(10L));
-        assertThat(output.getNumberOfCostumers(), equalTo(12L));
+        assertThat(output.getNumberOfCustomers(), equalTo(12L));
         assertThat(output.getMostExpensiveSaleId(), equalTo("1"));
 
     }

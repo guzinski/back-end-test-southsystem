@@ -1,11 +1,9 @@
 package guzinski.services;
 
-import guzinski.model.Costumer;
+import guzinski.model.Customer;
 import guzinski.model.FileInputData;
-import guzinski.service.CostumerAnalystService;
-import guzinski.service.CostumerAnalystServiceImpl;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import guzinski.service.CustomerAnalystService;
+import guzinski.service.CustomerAnalystServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.pcollections.PVector;
@@ -14,62 +12,62 @@ import org.pcollections.TreePVector;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class CostumerAnalystServiceTest {
+public class CustomerAnalystServiceTest {
 
-    private CostumerAnalystService service;
+    private CustomerAnalystService service;
 
     @Before
-    public void setUp() throws Exception {
-        service = new CostumerAnalystServiceImpl();
+    public void setUp() {
+        service = new CustomerAnalystServiceImpl();
     }
 
 
     @Test
-    public void testNumbersOfCostumersEmptyList() {
+    public void testNumbersOfcustomersEmptyList() {
         var input = FileInputData.builder()
-            .costumers(costumersListMockEmpty())
+            .customers(customersListMockEmpty())
             .build();
 
-        var number = service.findNumberOfCostumers(input);
+        var number = service.findNumberOfCustomers(input);
 
-        assertThat(number, equalTo(0L));;
+        assertThat(number, equalTo(0L));
     }
 
     @Test
-    public void testNumbersOfCostumers() {
+    public void testNumbersOfCustomers() {
         var input = FileInputData.builder()
-            .costumers(costumersListMock())
+            .customers(customersListMock())
             .build();
 
-        var number = service.findNumberOfCostumers(input);
+        var number = service.findNumberOfCustomers(input);
 
-        assertThat(number, equalTo(3L));;
+        assertThat(number, equalTo(3L));
     }
 
     @Test
-    public void testNumbersOfCostumersWithRepeated() {
+    public void testNumbersOfCustomersWithRepeated() {
         var input = FileInputData.builder()
-            .costumers(costumersListMockRepeated())
+            .customers(customersListMockRepeated())
             .build();
 
-        var number = service.findNumberOfCostumers(input);
+        var number = service.findNumberOfCustomers(input);
 
-        assertThat(number, equalTo(2L));;
+        assertThat(number, equalTo(2L));
     }
 
-    private PVector<Costumer> costumersListMock() {
+    private PVector<Customer> customersListMock() {
         return TreePVector
-            .singleton(Costumer.builder()
+            .singleton(Customer.builder()
                 .name("Luciano")
                 .documentNumber("123456")
                 .businessArea("Financial")
                 .build())
-            .plus(Costumer.builder()
+            .plus(Customer.builder()
                 .name("Fabrício")
                 .documentNumber("1234568")
                 .businessArea("It")
                 .build())
-            .plus(Costumer.builder()
+            .plus(Customer.builder()
                 .name("Emanuel")
                 .documentNumber("12344234")
                 .businessArea("Banking")
@@ -77,19 +75,19 @@ public class CostumerAnalystServiceTest {
     }
 
 
-    private PVector<Costumer> costumersListMockRepeated() {
+    private PVector<Customer> customersListMockRepeated() {
         return TreePVector
-            .singleton(Costumer.builder()
+            .singleton(Customer.builder()
                 .name("Luciano")
                 .documentNumber("123456")
                 .businessArea("Financial")
                 .build())
-            .plus(Costumer.builder()
+            .plus(Customer.builder()
                 .name("Fabrício")
                 .documentNumber("1234568")
                 .businessArea("It")
                 .build())
-            .plus(Costumer.builder()
+            .plus(Customer.builder()
                 .name("Fabrício")
                 .documentNumber("1234568")
                 .businessArea("It")
@@ -97,7 +95,7 @@ public class CostumerAnalystServiceTest {
     }
 
 
-    private PVector<Costumer> costumersListMockEmpty() {
+    private PVector<Customer> customersListMockEmpty() {
         return TreePVector.empty();
     }
 

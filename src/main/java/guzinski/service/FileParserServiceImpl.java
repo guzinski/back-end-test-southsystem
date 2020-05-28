@@ -1,7 +1,12 @@
 package guzinski.service;
 
 
-import guzinski.model.*;
+import guzinski.model.Customer;
+import guzinski.model.FileInputData;
+import guzinski.model.FileOutputData;
+import guzinski.model.Order;
+import guzinski.model.OrderItem;
+import guzinski.model.Seller;
 import org.pcollections.TreePVector;
 
 import java.io.IOException;
@@ -17,7 +22,7 @@ import java.util.stream.Stream;
 public class FileParserServiceImpl implements FileParserService {
 
     private final String sellerCode = "001";
-    private final String costumerCode = "002";
+    private final String customerCode = "002";
     private final String orderCode = "003";
     private final String stringSplitter = "ç";
 
@@ -33,27 +38,26 @@ public class FileParserServiceImpl implements FileParserService {
         });
 
         var futureSellers = futureLines.thenApply(this::findAndParseSellers);
-        var futureConsumers = futureLines.thenApply(this::findAndParseCostumers);
+        var futureConsumers = futureLines.thenApply(this::findAndParseCustomers);
         var futureOrders = futureLines.thenApply(this::findAndParseOrders);
 
-        var fileDataCompletableFuture = futureSellers
+        return futureSellers
             .thenCompose(sellers -> futureConsumers
-                .thenCompose(costumers -> futureOrders
+                .thenCompose(customers -> futureOrders
                     .thenApply(orders -> FileInputData.builder()
-                            .costumers(TreePVector.from(costumers))
+                            .customers(TreePVector.from(customers))
                             .sellers(TreePVector.from(sellers))
                             .orders(TreePVector.from(orders))
                             .fileName(path.getFileName().toString())
                             .build())));
 
-        return fileDataCompletableFuture;
     }
 
     @Override
     public String saveFile(FileOutputData outputData, String pathDir) {
         createDirectoryIfNotExists(pathDir);
 
-        var content = String.join(stringSplitter, outputData.getNumberOfCostumers().toString(),
+        var content = String.join(stringSplitter, outputData.getNumberOfCustomers().toString(),
             outputData.getNumberOfSellers().toString(),
             outputData.getMostExpensiveSaleId(),
             outputData.getWorseSellerName());
@@ -86,11 +90,11 @@ public class FileParserServiceImpl implements FileParserService {
                 .collect(Collectors.toList());
     }
 
-    private List<Costumer> findAndParseCostumers(List<String> lines) {
+    private List<Customer> findAndParseCustomers(List<String> lines) {
         return lines.stream()
                 .parallel()
-                .filter(s -> s.startsWith(costumerCode))
-                .map(this::parseCostumer)
+                .filter(s -> s.startsWith(customerCode))
+                .map(this::parseCustomer)
                 .collect(Collectors.toList());
     }
 
@@ -111,9 +115,9 @@ public class FileParserServiceImpl implements FileParserService {
                 .build();
     }
 
-    private Costumer parseCostumer(String consumerLine) {
+    private Customer parseCustomer(String consumerLine) {
         var parts = consumerLine.split(stringSplitter);
-        return Costumer.builder()
+        return Customer.builder()
                 .documentNumber(parts[1])
                 .name(parts[2])
                 .businessArea(parts[3])
@@ -122,7 +126,7 @@ public class FileParserServiceImpl implements FileParserService {
 
     private Order parseOrder(String orderLine) {
         var parts = orderLine.split(stringSplitter);
-        var items = parts[2].replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+        var items = parts[2].replaceAll("\\[", "").replaceAll("]", "").split(",");
 
         List<OrderItem> orderItems = Stream.of(items)
                 .map(this::parseOrderItem)

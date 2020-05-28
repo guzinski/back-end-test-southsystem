@@ -6,7 +6,7 @@ import lombok.Value;
 @Builder
 @Value
 public class FileOutputData {
-    Long numberOfCostumers;
+    Long numberOfCustomers;
     Long numberOfSellers;
     String mostExpensiveSaleId;
     String worseSellerName;
